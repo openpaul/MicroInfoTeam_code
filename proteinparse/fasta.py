@@ -11,13 +11,13 @@ class faafile:
 
     def __init__(self, path):
         # openfile
-        _path = Path(path)
-        self._open(_path)
-        return
+        self._path = Path(path)
+        #self._open(_path)
+        #return
 
-    def _open(self, path):
+    def __iter__(self):
         # check if file is there
-        if not path.exists():
+        if not self._path.exists():
             # throw error
             raise OSError("File not found")
 
@@ -25,7 +25,7 @@ class faafile:
         # sequence
 
         # if its there open it and loop it
-        with open(path) as fin:  # file input
+        with open(self._path) as fin:  # file input
             lines = []
             for line in fin:
                 line = line.strip()
@@ -72,10 +72,10 @@ class faafile:
                 fields[key] = value
 
         # return a sequence object
-        return sequence(seq_name, sequence, start, end, strand, genecaller, metadata)
+        return Sequence(seq_name, sequence, start, end, strand, genecaller, fields)
 
 
-class sequence:
+class Sequence:
     """
     Sequence object. Gives access to properties of sequences
     """
@@ -85,7 +85,7 @@ class sequence:
         self.sequence = sequence
         self.start = int(start)
         self.end = int(end)
-        self.strand = strand
+        self.strand = int(strand)
         self.genecaller = genecaller
         if metadata is None:
             self.metadata = {}
