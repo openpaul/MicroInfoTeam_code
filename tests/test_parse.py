@@ -1,7 +1,7 @@
 import os
 import random
 import string
-from proteinparse.fasta import faafile
+from proteinparse.fasta import faafile, Sequence
 
 faa_mixed = os.path.join(os.path.dirname(__file__), "test_files/test_mixed.faa")
 faa_single = os.path.join(os.path.dirname(__file__), "test_files/single.faa")
@@ -26,9 +26,7 @@ class Test_faaparse:
         header = ">" + fake_name + " # 135 # 938 # -1 # ID=1_2;" + \
                  "partial=00;start_type=ATG;rbs_motif=AGGA;rbs_spacer=5-10bp;gc_cont=0.415"
         
-        faa = faafile(faa_single)
-
-        result = faa._parse([header])
+        result = Sequence([header])
 
         assert result.name == fake_name
         assert result.start == 135

@@ -12,8 +12,6 @@ class faafile:
     def __init__(self, path):
         # openfile
         self._path = Path(path)
-        #self._open(_path)
-        #return
 
     def __iter__(self):
         # check if file is there
@@ -32,12 +30,21 @@ class faafile:
                 # each line
                 if line.startswith(">") and len(lines) > 0:
                     # new sequence
-                    yield self._parse(lines)
+                    yield Sequence(lines)
                     # reset lines tracker
                     lines = []
                 # add new lines
                 lines.append(line)
-            yield self._parse(lines)
+            yield Sequence(lines)
+
+    
+class Sequence:
+    """
+    Sequence object. Gives access to properties of sequences
+    """
+
+    def __init__(self, lines):
+        self._parse(lines)
 
     def _parse(self, lines):
         """
@@ -75,15 +82,9 @@ class faafile:
                 fields[key] = value
 
         # return a sequence object
-        return Sequence(seq_name, sequence, start, end, strand, genecaller, fields)
+        return self.create_sequence(seq_name, sequence, start, end, strand, genecaller, fields)
 
-
-class Sequence:
-    """
-    Sequence object. Gives access to properties of sequences
-    """
-
-    def __init__(self, name, sequence, start, end, strand, genecaller, metadata=None):
+    def create_sequence(self, name, sequence, start, end, strand, genecaller, metadata=None):
         self.name = name
         self.sequence = sequence
         self.start = int(start)
