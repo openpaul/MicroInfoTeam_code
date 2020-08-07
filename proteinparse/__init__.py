@@ -1,0 +1,1 @@
+from proteinparse.fasta import faafile

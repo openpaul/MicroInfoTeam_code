@@ -40,6 +40,9 @@ class faafile:
             yield self._parse(lines)
 
     def _parse(self, lines):
+        """
+        parse list of strings of a single fasta entry
+        """
         header = lines[0]
         sequence = "".join(lines[1:])
 
