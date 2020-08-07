@@ -1,6 +1,6 @@
 import os
 import random
-# import string
+import string
 from proteinparse.fasta import faafile
 
 faa_mixed = os.path.join(os.path.dirname(__file__), "test_files/test_mixed.faa")
@@ -22,9 +22,26 @@ class Test_faaparse:
         """Test a random header fasta name
         """
         
-        #fake_string = ''.join(random.sample(string.letters, 15))
+        fake_name = "".join(random.sample(string.punctuation + string.ascii_uppercase + string.digits, 15))
+        header = ">" + fake_name + " # 135 # 938 # -1 # ID=1_2;" + \
+                 "partial=00;start_type=ATG;rbs_motif=AGGA;rbs_spacer=5-10bp;gc_cont=0.415"
         
-        pass
+        faa = faafile(faa_single)
+
+        result = faa._parse([header])
+
+        assert result.name == fake_name
+        assert result.start == 135
+        assert result.end == 938
+        assert result.strand == -1
+        assert result.metadata == {
+            "ID": "1_2",
+            "partial": "00",
+            "start_type": "ATG",
+            "rbs_motif": "AGGA",
+            "rbs_spacer": "5-10bp",
+            "gc_cont": "0.415"
+        }
     
     def test_mixed_values(self):
         expected_values = [
